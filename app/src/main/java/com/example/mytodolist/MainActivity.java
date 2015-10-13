@@ -46,6 +46,13 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, TodoEntryActivity.class);
                 startActivityForResult(intent, 1, null);
                 break;
+            case R.id.goSelectMode:
+                if (adapter.isSelectMode()) {
+                    adapter.stopSelectMode();
+                } else {
+                    adapter.startSelectMode();
+                }
+                break;
             default:
                 return super.onOptionsItemSelected(item);
         }

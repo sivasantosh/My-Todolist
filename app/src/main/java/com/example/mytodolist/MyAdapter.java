@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -12,15 +13,18 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     ArrayList<Entry> dataset;
     MainActivity activity;
+    boolean selectMode = false;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView textView;
+        CheckBox checkBox;
 
         ViewHolder (View v) {
             super(v);
             imageView = (ImageView) v.findViewById(R.id.imageView);
             textView = (TextView) v.findViewById(R.id.textView);
+            checkBox = (CheckBox) v.findViewById(R.id.checkBox);
         }
     }
 
@@ -42,12 +46,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Entry e = dataset.get(i);
         viewHolder.textView.setText(e.text);
 
-        viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                activity.editEntry(i);
-            }
-        });
+        if (selectMode) {
+            viewHolder.checkBox.setVisibility(View.VISIBLE);
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    viewHolder.checkBox.setChecked(!viewHolder.checkBox.isChecked());
+                }
+            });
+        } else {
+            viewHolder.checkBox.setVisibility(View.GONE);
+            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    activity.editEntry(i);
+                }
+            });
+        }
 
         int m;
         switch (e.marked) {
@@ -80,5 +95,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         e.text = text;
 
         notifyItemChanged(pos);
+    }
+
+    boolean isSelectMode () {
+        return selectMode;
+    }
+
+    void startSelectMode () {
+        selectMode = true;
+        notifyItemRangeChanged(0, dataset.size());
+    }
+
+    void stopSelectMode () {
+        selectMode = false;
+        notifyItemRangeChanged(0, dataset.size());
     }
 }
