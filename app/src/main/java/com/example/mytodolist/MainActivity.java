@@ -13,25 +13,23 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        ArrayList<String> data = new ArrayList<String>();
-        for (int i = 0; i < 5; i++) {
-            data.add("Test "+i);
+        ArrayList<Entry> dataset = new ArrayList<Entry>();
+        for (int i = 0; i < 10; i++) {
+            dataset.add(new Entry("test entry "+i, (int) Math.floor(Math.random() * 3)));
         }
 
         RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
 
         r.setLayoutManager(new LinearLayoutManager(this));
 
-        r.setAdapter(new MyAdapter(data));
+        r.setAdapter(new MyAdapter(dataset));
     }
 
     @Override
@@ -57,8 +55,18 @@ public class MainActivity extends AppCompatActivity {
     }
 }
 
+class Entry {
+    String text;
+    int marked;
+
+    Entry (String t, int m) {
+        text = t;
+        marked = m;
+    }
+}
+
 class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    ArrayList<String> dataset;
+    ArrayList<Entry> dataset;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
@@ -71,7 +79,7 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    MyAdapter (ArrayList<String> data) {
+    MyAdapter (ArrayList<Entry> data) {
         dataset = data;
     }
 
@@ -84,9 +92,23 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int i) {
-        final String entry = dataset.get(i);
-        viewHolder.textView.setText(entry);
-        viewHolder.imageView.setImageResource(R.drawable.mark_do);
+        Entry e = dataset.get(i);
+        viewHolder.textView.setText(e.text);
+
+        int m;
+        switch (e.marked) {
+            case 1:
+                m = R.drawable.mark_done;
+                break;
+            case 2:
+                m = R.drawable.mark_imp;
+                break;
+            default:
+                m = R.drawable.mark_do;
+                break;
+        }
+
+        viewHolder.imageView.setImageResource(m);
     }
 
     @Override
