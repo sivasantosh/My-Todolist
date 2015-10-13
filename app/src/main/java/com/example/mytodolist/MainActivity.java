@@ -1,9 +1,11 @@
 package com.example.mytodolist;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,13 +17,15 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+    MyAdapter adapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
         ArrayList<Entry> dataset = new ArrayList<Entry>();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             dataset.add(new Entry("test entry "+i, (int) Math.floor(Math.random() * 3)));
         }
 
@@ -29,7 +33,8 @@ public class MainActivity extends AppCompatActivity {
 
         r.setLayoutManager(new LinearLayoutManager(this));
 
-        r.setAdapter(new MyAdapter(dataset));
+        adapter = new MyAdapter(dataset);
+        r.setAdapter(adapter);
     }
 
     @Override
@@ -41,23 +46,38 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
+        switch (item.getItemId()) {
+            case R.id.addEntry:
+                Intent intent = new Intent(this, TodoEntryActivity.class);
+                startActivityForResult(intent, 1, null);
+                break;
+            default:
+                return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == 1 && resultCode == RESULT_OK) {
+            String entry_text = data.getStringExtra("entry_text");
+            boolean mark_imp = data.getBooleanExtra("mark_imp", false);
+
+            if (entry_text != null) {
+                adapter.add(new Entry(entry_text, mark_imp?Entry.MARK_IMP:Entry.MARK_DO));
+            }
+        }
     }
 }
 
 class Entry {
     String text;
     int marked;
+
+    public static final int MARK_DO = 0;
+    public static final int MARK_DONE = 1;
+    public static final int MARK_IMP = 2;
 
     Entry (String t, int m) {
         text = t;
@@ -114,5 +134,10 @@ class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return dataset.size();
+    }
+
+    void add (Entry e) {
+        dataset.add(e);
+        notifyItemInserted(dataset.indexOf(e));
     }
 }
