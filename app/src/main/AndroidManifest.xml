@@ -20,6 +20,10 @@
             android:name=".TodoEntryActivity"
             android:label="@string/title_activity_todo_entry" >
         </activity>
+        <activity
+            android:name=".EditEntryActivity"
+            android:label="@string/title_activity_edit_entry" >
+        </activity>
     </application>
 
 </manifest>
