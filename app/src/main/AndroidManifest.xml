@@ -18,11 +18,13 @@
         </activity>
         <activity
             android:name=".TodoEntryActivity"
-            android:label="@string/title_activity_todo_entry" >
+            android:label="@string/title_activity_todo_entry"
+            android:parentActivityName=".MainActivity" >
         </activity>
         <activity
             android:name=".EditEntryActivity"
-            android:label="@string/title_activity_edit_entry" >
+            android:label="@string/title_activity_edit_entry"
+            android:parentActivityName=".MainActivity" >
         </activity>
     </application>
 
