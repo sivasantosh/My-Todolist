@@ -62,6 +62,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     activity.editEntry(i);
                 }
             });
+            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    activity.showContextMenu();
+                    return true;
+                }
+            });
         }
 
         int m;

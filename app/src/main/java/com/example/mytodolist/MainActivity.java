@@ -5,8 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.ActionMode;
+import android.view.ContextMenu;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -46,18 +50,19 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(this, TodoEntryActivity.class);
                 startActivityForResult(intent, 1, null);
                 break;
-            case R.id.goSelectMode:
-                if (adapter.isSelectMode()) {
-                    adapter.stopSelectMode();
-                } else {
-                    adapter.startSelectMode();
-                }
-                break;
             default:
                 return super.onOptionsItemSelected(item);
         }
 
         return true;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.context_menu_main, menu);
     }
 
     @Override
@@ -89,4 +94,38 @@ public class MainActivity extends AppCompatActivity {
 
         startActivityForResult(intent, 2);
     }
+
+    public void showContextMenu () {
+        adapter.startSelectMode();
+        startActionMode(actionModeCallback);
+    }
+
+    private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
+        @Override
+        public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+            MenuInflater inflater = mode.getMenuInflater();
+            inflater.inflate(R.menu.context_menu_main, menu);
+            return true;
+        }
+
+        @Override
+        public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+            return false;
+        }
+
+        @Override
+        public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            switch (item.getItemId()) {
+                case R.id.context_menu_del:
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        @Override
+        public void onDestroyActionMode(ActionMode mode) {
+            adapter.stopSelectMode();
+        }
+    };
 }
