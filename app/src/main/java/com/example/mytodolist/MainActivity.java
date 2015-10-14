@@ -12,27 +12,19 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 
-import java.util.ArrayList;
-
 public class MainActivity extends AppCompatActivity {
     MyAdapter adapter;
-    ArrayList<Entry> dataset;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        dataset = new ArrayList<Entry>();
-        for (int i = 0; i < 5; i++) {
-            dataset.add(new Entry("test entry "+i));
-        }
-
         RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
 
         r.setLayoutManager(new LinearLayoutManager(this));
 
-        adapter = new MyAdapter(this, dataset);
+        adapter = new MyAdapter(this);
         r.setAdapter(adapter);
     }
 
@@ -74,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.add(new Entry(entry_text));
 
                 RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
-                r.smoothScrollToPosition(dataset.size());
+                r.smoothScrollToPosition(MyApplicationClass.getInstance().entryCount());
             }
         } else if (requestCode == 2 && resultCode == RESULT_OK) {
             String entry_text = data.getStringExtra("entry_text");
@@ -87,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void editEntry (int pos) {
-        Entry e = dataset.get(pos);
+        Entry e = MyApplicationClass.getInstance().getEntry(pos);
         Intent intent = new Intent(this, EditEntryActivity.class);
         intent.putExtra("entry_text", e.text);
         intent.putExtra("entry_pos", pos);

@@ -8,10 +8,8 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    ArrayList<Entry> dataset;
+    MyApplicationClass appdata;
     MainActivity activity;
     boolean selectMode = false;
 
@@ -28,9 +26,9 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
     }
 
-    MyAdapter (MainActivity activity, ArrayList<Entry> data) {
+    MyAdapter (MainActivity activity) {
         this.activity = activity;
-        dataset = data;
+        appdata = MyApplicationClass.getInstance();
     }
 
     @Override
@@ -43,7 +41,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
-        Entry e = dataset.get(i);
+        Entry e = appdata.getEntry(i);
         viewHolder.textView.setText(e.text);
 
         if (selectMode) {
@@ -89,16 +87,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return dataset.size();
+        return appdata.entryCount();
     }
 
     void add (Entry e) {
-        dataset.add(e);
-        notifyItemInserted(dataset.indexOf(e));
+        appdata.appendEntry(e);
+        notifyItemInserted(appdata.getPos(e));
     }
 
     void update (String text, int pos) {
-        Entry e = dataset.get(pos);
+        Entry e = appdata.getEntry(pos);
         e.text = text;
 
         notifyItemChanged(pos);
@@ -110,11 +108,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     void startSelectMode () {
         selectMode = true;
-        notifyItemRangeChanged(0, dataset.size());
+        notifyItemRangeChanged(0, appdata.entryCount());
     }
 
     void stopSelectMode () {
         selectMode = false;
-        notifyItemRangeChanged(0, dataset.size());
+        notifyItemRangeChanged(0, appdata.entryCount());
     }
 }
