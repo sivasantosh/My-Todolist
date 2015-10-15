@@ -180,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onDestroy() {
+    protected void onStop() {
         DatabaseHelper dh = new DatabaseHelper(this);
         SQLiteDatabase db = dh.getWritableDatabase();
 
@@ -199,6 +199,6 @@ public class MainActivity extends AppCompatActivity {
             db.insert(DatabaseContract.TodoListTable.TABLE_NAME, null, values);
         }
 
-        super.onDestroy();
+        super.onStop();
     }
 }
