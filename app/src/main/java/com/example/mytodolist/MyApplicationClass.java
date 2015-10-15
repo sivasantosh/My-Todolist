@@ -19,23 +19,7 @@ public class MyApplicationClass extends Application {
         singleton = this;
     }
 
-    public Entry getEntry (int i) {
-        return dataset.get(i);
-    }
-
-    public void appendEntry (Entry e) {
-        dataset.add(e);
-    }
-
-    public int getEntryPos (Entry e) {
-        return dataset.indexOf(e);
-    }
-
-    public int entryCount () {
-        return dataset.size();
-    }
-
-    public Entry removeEntry (int i) {
-        return dataset.remove(i);
+    public ArrayList<Entry> getDataset() {
+        return dataset;
     }
 }

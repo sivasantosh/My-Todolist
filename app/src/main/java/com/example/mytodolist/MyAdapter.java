@@ -8,9 +8,11 @@ import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-    MyApplicationClass appdata;
     MainActivity activity;
+    ArrayList<Entry> dataset;
     boolean selectMode = false;
 
     class ViewHolder extends RecyclerView.ViewHolder {
@@ -28,7 +30,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     MyAdapter (MainActivity activity) {
         this.activity = activity;
-        appdata = MyApplicationClass.getInstance();
+        dataset = MyApplicationClass.getInstance().getDataset();
     }
 
     @Override
@@ -41,20 +43,18 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-        Entry e = appdata.getEntry(i);
-        viewHolder.textView.setText(e.text);
-
-        final Entry thisEntry = appdata.getEntry(i);
+        final Entry thisEntry = dataset.get(i);
+        viewHolder.textView.setText(thisEntry.text);
 
         if (selectMode) {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
-            viewHolder.checkBox.setChecked(e.checked);
+            viewHolder.checkBox.setChecked(thisEntry.checked);
             viewHolder.checkBox.setClickable(false);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     thisEntry.checked = !thisEntry.checked;
-                    notifyItemChanged(appdata.getEntryPos(thisEntry));
+                    notifyItemChanged(dataset.indexOf(thisEntry));
                 }
             });
             viewHolder.imageView.setOnLongClickListener(null);
@@ -63,7 +63,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.editEntry(appdata.getEntryPos(thisEntry));
+                    activity.editEntry(dataset.indexOf(thisEntry));
                 }
             });
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -78,7 +78,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
 
         int m;
-        switch (e.marked) {
+        switch (thisEntry.marked) {
             case 1:
                 m = R.drawable.mark_done;
                 break;
@@ -95,16 +95,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return appdata.entryCount();
+        return dataset.size();
     }
 
     void add (Entry e) {
-        appdata.appendEntry(e);
-        notifyItemInserted(appdata.getEntryPos(e));
+        dataset.add(e);
+        notifyItemInserted(dataset.indexOf(e));
     }
 
     void update (String text, int pos) {
-        Entry e = appdata.getEntry(pos);
+        Entry e = dataset.get(pos);
         e.text = text;
 
         notifyItemChanged(pos);
@@ -112,7 +112,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     void startSelectMode () {
         selectMode = true;
-        notifyItemRangeChanged(0, appdata.entryCount());
+        notifyItemRangeChanged(0, dataset.size());
     }
 
     void stopSelectMode () {
@@ -122,38 +122,39 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     void uncheckAllEntries () {
-        int size = appdata.entryCount();
+        int size = dataset.size();
         for (int i = 0; i < size; i++) {
-            appdata.getEntry(i).checked = false;
+            dataset.get(i).checked = false;
         }
 
-        notifyItemRangeChanged(0, appdata.entryCount());
+        notifyDataSetChanged();
     }
 
     void checkAllEntries () {
-        int size = appdata.entryCount();
+        int size = dataset.size();
         for (int i = 0; i < size; i++) {
-            appdata.getEntry(i).checked = true;
+            dataset.get(i).checked = true;
         }
 
-        notifyItemRangeChanged(0, appdata.entryCount());
+        notifyItemRangeChanged(0, size);
     }
 
     void markCheckEntriesAs (int mark) {
-        int size = appdata.entryCount();
+        int size = dataset.size();
         for (int i = 0; i < size; i++) {
-            if (appdata.getEntry(i).checked) {
-                appdata.getEntry(i).marked = mark;
+            Entry e = dataset.get(i);
+            if (e.checked) {
+                e.marked = mark;
                 notifyItemChanged(i);
             }
         }
     }
 
     void deleteCheckEntries () {
-        int size = appdata.entryCount();
+        int size = dataset.size();
         for (int i = size-1; i >= 0; i--) {
-            if (appdata.getEntry(i).checked) {
-                appdata.removeEntry(i);
+            if (dataset.get(i).checked) {
+                dataset.remove(i);
                 notifyItemRemoved(i);
             }
         }

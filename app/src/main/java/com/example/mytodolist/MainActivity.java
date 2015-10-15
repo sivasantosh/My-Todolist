@@ -18,11 +18,14 @@ import android.view.View;
 
 public class MainActivity extends AppCompatActivity {
     MyAdapter adapter;
+    MyApplicationClass appdata;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        appdata = MyApplicationClass.getInstance();
 
         RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
 
@@ -72,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.add(new Entry(entry_text));
 
                 RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
-                r.smoothScrollToPosition(MyApplicationClass.getInstance().entryCount());
+                r.smoothScrollToPosition(appdata.getDataset().size());
             }
         } else if (requestCode == 2 && resultCode == RESULT_OK) {
             String entry_text = data.getStringExtra("entry_text");
@@ -85,7 +88,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void editEntry (int pos) {
-        Entry e = MyApplicationClass.getInstance().getEntry(pos);
+        Entry e = appdata.getDataset().get(pos);
         Intent intent = new Intent(this, EditEntryActivity.class);
         intent.putExtra("entry_text", e.text);
         intent.putExtra("entry_pos", pos);
@@ -161,14 +164,16 @@ public class MainActivity extends AppCompatActivity {
 
             Cursor c = db.query(DatabaseContract.TodoListTable.TABLE_NAME, projection, null, null, null, null, DatabaseContract.TodoListTable._ID);
 
-            appdata = MyApplicationClass.getInstance();
-            c.moveToFirst();
-            do {
-                String text = c.getString(c.getColumnIndex(DatabaseContract.TodoListTable.COLUMN_ENTRY));
-                int mark = c.getInt(c.getColumnIndex(DatabaseContract.TodoListTable.COLUMN_MARKED));
+            if (c != null && c.moveToFirst()) {
+                do {
+                    String text = c.getString(c.getColumnIndex(DatabaseContract.TodoListTable.COLUMN_ENTRY));
+                    int mark = c.getInt(c.getColumnIndex(DatabaseContract.TodoListTable.COLUMN_MARKED));
 
-                appdata.appendEntry(new Entry(text, mark));
-            } while (c.moveToNext());
+                    MyApplicationClass.getInstance().getDataset().add(new Entry(text, mark));
+                } while (c.moveToNext());
+
+                c.close();
+            }
 
             return true;
         }
@@ -190,9 +195,9 @@ public class MainActivity extends AppCompatActivity {
 
         MyApplicationClass appdata = MyApplicationClass.getInstance();
 
-        while (appdata.entryCount() > 0) {
+        while (appdata.getDataset().size() > 0) {
             values.clear();
-            Entry e = appdata.removeEntry(0);
+            Entry e = appdata.getDataset().remove(0);
             values.put(DatabaseContract.TodoListTable.COLUMN_ENTRY, e.text);
             values.put(DatabaseContract.TodoListTable.COLUMN_MARKED, e.marked);
 
