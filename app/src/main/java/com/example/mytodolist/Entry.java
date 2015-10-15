@@ -10,8 +10,16 @@ public class Entry {
     public static final int MARK_IMP = 2;
 
     Entry (String t) {
+        createEntry (t, MARK_DO);
+    }
+
+    Entry (String t, int m) {
+        createEntry(t, m);
+    }
+
+    private void createEntry (String t, int m) {
         text = t;
-        marked = MARK_DO;
+        marked = m;
         checked = false;
     }
 }

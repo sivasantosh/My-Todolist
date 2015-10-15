@@ -1,7 +1,6 @@
 package com.example.mytodolist;
 
 import android.app.Application;
-import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -16,11 +15,7 @@ public class MyApplicationClass extends Application {
     @Override
     public void onCreate() {
         super.onCreate();
-        Log.d("testapp", "application oncreate");
         dataset = new ArrayList<Entry>();
-        for (int i = 0; i < 5; i++) {
-            appendEntry(new Entry("test entry " + i));
-        }
         singleton = this;
     }
 
@@ -40,7 +35,7 @@ public class MyApplicationClass extends Application {
         return dataset.size();
     }
 
-    public void removeEntry (int i) {
-        dataset.remove(i);
+    public Entry removeEntry (int i) {
+        return dataset.remove(i);
     }
 }
