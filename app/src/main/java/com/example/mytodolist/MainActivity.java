@@ -2,7 +2,6 @@ package com.example.mytodolist;
 
 import android.content.ContentValues;
 import android.content.Intent;
-import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +14,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+
+import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
     MyAdapter adapter;
@@ -33,8 +34,6 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new MyAdapter(this);
         r.setAdapter(adapter);
-
-        new LoadFromDatabase().execute("test");
     }
 
     @Override
@@ -147,62 +146,44 @@ public class MainActivity extends AppCompatActivity {
         }
     };
 
-    // looks like this is not needed. It loads pretty fast.
-    class LoadFromDatabase extends AsyncTask<String, Integer, Boolean> {
-        MyApplicationClass appdata;
-
+    class SaveToDB extends AsyncTask<String, Integer, Boolean> {
         @Override
         protected Boolean doInBackground(String... params) {
             DatabaseHelper dh = new DatabaseHelper(getApplicationContext());
+            SQLiteDatabase db = dh.getWritableDatabase();
 
-            SQLiteDatabase db = dh.getReadableDatabase();
+            db.beginTransaction();
 
-            String[] projection = {
-                    DatabaseContract.TodoListTable.COLUMN_ENTRY,
-                    DatabaseContract.TodoListTable.COLUMN_MARKED
-            };
+            try {
+                db.delete(DatabaseContract.TodoListTable.TABLE_NAME, null, null);
 
-            Cursor c = db.query(DatabaseContract.TodoListTable.TABLE_NAME, projection, null, null, null, null, DatabaseContract.TodoListTable._ID);
+                ContentValues values = new ContentValues();
 
-            if (c != null && c.moveToFirst()) {
-                do {
-                    String text = c.getString(c.getColumnIndex(DatabaseContract.TodoListTable.COLUMN_ENTRY));
-                    int mark = c.getInt(c.getColumnIndex(DatabaseContract.TodoListTable.COLUMN_MARKED));
+                ArrayList<Entry> dataset = MyApplicationClass.getInstance().getDataset();
 
-                    MyApplicationClass.getInstance().getDataset().add(new Entry(text, mark));
-                } while (c.moveToNext());
+                for (int i = 0, s = dataset.size(); i < s; i++) {
+                    values.clear();
+                    Entry e = dataset.get(i);
+                    values.put(DatabaseContract.TodoListTable.COLUMN_ENTRY, e.text);
+                    values.put(DatabaseContract.TodoListTable.COLUMN_MARKED, e.marked);
 
-                c.close();
+                    db.insert(DatabaseContract.TodoListTable.TABLE_NAME, null, values);
+                }
+
+                db.setTransactionSuccessful();
+            } finally {
+                db.endTransaction();
             }
 
-            return true;
-        }
+            db.close();
 
-        @Override
-        protected void onPostExecute(Boolean aBoolean) {
-            adapter.notifyDataSetChanged();
+            return true;
         }
     }
 
     @Override
     protected void onStop() {
-        DatabaseHelper dh = new DatabaseHelper(this);
-        SQLiteDatabase db = dh.getWritableDatabase();
-
-        db.delete(DatabaseContract.TodoListTable.TABLE_NAME, null, null);
-
-        ContentValues values = new ContentValues();
-
-        MyApplicationClass appdata = MyApplicationClass.getInstance();
-
-        while (appdata.getDataset().size() > 0) {
-            values.clear();
-            Entry e = appdata.getDataset().remove(0);
-            values.put(DatabaseContract.TodoListTable.COLUMN_ENTRY, e.text);
-            values.put(DatabaseContract.TodoListTable.COLUMN_MARKED, e.marked);
-
-            db.insert(DatabaseContract.TodoListTable.TABLE_NAME, null, values);
-        }
+        new SaveToDB().execute("save");
 
         super.onStop();
     }
