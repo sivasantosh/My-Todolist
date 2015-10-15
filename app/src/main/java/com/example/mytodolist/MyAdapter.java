@@ -40,9 +40,11 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     @Override
-    public void onBindViewHolder(final ViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(final ViewHolder viewHolder, int i) {
         Entry e = appdata.getEntry(i);
         viewHolder.textView.setText(e.text);
+
+        final Entry thisEntry = appdata.getEntry(i);
 
         if (selectMode) {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
@@ -51,8 +53,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    appdata.getEntry(i).checked = !appdata.getEntry(i).checked;
-                    notifyItemChanged(i);
+                    thisEntry.checked = !thisEntry.checked;
+                    notifyItemChanged(appdata.getEntryPos(thisEntry));
                 }
             });
         } else {
@@ -60,13 +62,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    activity.editEntry(i);
+                    activity.editEntry(appdata.getEntryPos(thisEntry));
                 }
             });
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    appdata.getEntry(i).checked = true;
+                    thisEntry.checked = true;
                     activity.showContextMenu();
                     return true;
                 }
