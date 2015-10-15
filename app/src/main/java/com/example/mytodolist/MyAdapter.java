@@ -129,4 +129,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         notifyItemRangeChanged(0, appdata.entryCount());
     }
+
+    void checkAllEntries () {
+        int size = appdata.entryCount();
+        for (int i = 0; i < size; i++) {
+            appdata.getEntry(i).checked = true;
+        }
+
+        notifyItemRangeChanged(0, appdata.entryCount());
+    }
+
+    void markCheckEntriesAs (int mark) {
+        int size = appdata.entryCount();
+        for (int i = 0; i < size; i++) {
+            if (appdata.getEntry(i).checked) {
+                appdata.getEntry(i).marked = mark;
+                notifyItemChanged(i);
+            }
+        }
+    }
 }
