@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showContextMenu () {
-        adapter.startSelectMode();
         startActionMode(actionModeCallback);
     }
 
