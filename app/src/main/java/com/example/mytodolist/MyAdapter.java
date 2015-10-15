@@ -47,6 +47,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         if (selectMode) {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
             viewHolder.checkBox.setChecked(e.checked);
+            viewHolder.checkBox.setClickable(false);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
