@@ -150,4 +150,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             }
         }
     }
+
+    void deleteCheckEntries () {
+        int size = appdata.entryCount();
+        for (int i = size-1; i >= 0; i--) {
+            if (appdata.getEntry(i).checked) {
+                appdata.removeEntry(i);
+                notifyItemRemoved(i);
+            }
+        }
+    }
 }

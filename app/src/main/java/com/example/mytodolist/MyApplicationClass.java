@@ -39,4 +39,8 @@ public class MyApplicationClass extends Application {
     public int entryCount () {
         return dataset.size();
     }
+
+    public void removeEntry (int i) {
+        dataset.remove(i);
+    }
 }
