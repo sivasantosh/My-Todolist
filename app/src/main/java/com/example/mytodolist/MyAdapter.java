@@ -46,10 +46,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         if (selectMode) {
             viewHolder.checkBox.setVisibility(View.VISIBLE);
+            viewHolder.checkBox.setChecked(e.checked);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    viewHolder.checkBox.setChecked(!viewHolder.checkBox.isChecked());
+                    appdata.getEntry(i).checked = !appdata.getEntry(i).checked;
+                    notifyItemChanged(i);
                 }
             });
         } else {
@@ -63,6 +65,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
+                    appdata.getEntry(i).checked = true;
                     activity.showContextMenu();
                     return true;
                 }
@@ -112,7 +115,16 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     void stopSelectMode () {
+        clearEntrySelection();
+
         selectMode = false;
         notifyItemRangeChanged(0, appdata.entryCount());
+    }
+
+    void clearEntrySelection () {
+        int size = appdata.entryCount();
+        for (int i = 0; i < size; i++) {
+            appdata.getEntry(i).checked = false;
+        }
     }
 }
