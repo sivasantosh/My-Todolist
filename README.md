@@ -23,23 +23,35 @@ The todolist is saved to database everytime app is stopped. Database transaction
 
 ## SNAPSHOTS
 
-![When app starts for first time](images/app_start.png)
 When app starts for first time.
 
-![new todo activity (edit todo is similar)](images/new_todo.png)
+![When app starts for first time](images/app_start.png)
+
+
 new todo activity (edit todo is similar)
 
-![contextual action bar](images/contextual_action_bar.png)
-contextual action bar
+![new todo activity (edit todo is similar)](images/new_todo.png)
 
-![contextual action bar hidden menu](images/contextual_action_bar_2.png)
+
+the top bar (with icons) is a contextual action bar
+
+![contextual action bar](images/contextual_action_bar.png)
+
+
 contextual action bar hidden menu
 
-![todo's marked important and completed](images/todo_marks.png)
+![contextual action bar hidden menu](images/contextual_action_bar_2.png)
+
+
 todo's marked important and completed
 
-![in landscape mode](images/landscape.png)
+![todo's marked important and completed](images/todo_marks.png)
+
+
 in landscape mode
+
+![in landscape mode](images/landscape.png)
+
 
 ## TODO
 
