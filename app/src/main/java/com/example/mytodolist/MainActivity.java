@@ -20,6 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     MyAdapter adapter;
     MyApplicationClass appdata;
+    ActionMode actionMode;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +35,11 @@ public class MainActivity extends AppCompatActivity {
 
         adapter = new MyAdapter(this);
         r.setAdapter(adapter);
+
+
+        if (appdata.getDataset().size() == 0) {
+            r.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -74,6 +80,7 @@ public class MainActivity extends AppCompatActivity {
                 adapter.add(new Entry(entry_text));
 
                 RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
+                r.setVisibility(View.VISIBLE);
                 r.smoothScrollToPosition(appdata.getDataset().size());
             }
         } else if (requestCode == 2 && resultCode == RESULT_OK) {
@@ -96,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void showContextMenu () {
-        startActionMode(actionModeCallback);
+        actionMode = startActionMode(actionModeCallback);
     }
 
     private ActionMode.Callback actionModeCallback = new ActionMode.Callback() {
@@ -115,29 +122,40 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             MyApplicationClass appdata = MyApplicationClass.getInstance();
+            boolean flag = false;
 
             switch (item.getItemId()) {
                 case R.id.context_menu_mark_done:
                     adapter.markCheckEntriesAs(Entry.MARK_DONE);
-                    return true;
+                    break;
                 case R.id.context_menu_mark_imp:
                     adapter.markCheckEntriesAs(Entry.MARK_IMP);
-                    return true;
+                    break;
                 case R.id.context_menu_no_mark:
                     adapter.markCheckEntriesAs(Entry.MARK_DO);
-                    return true;
+                    break;
                 case R.id.context_menu_del:
                     adapter.deleteCheckEntries();
-                    return true;
+                    if (appdata.getDataset().size() == 0) {
+                        RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
+                        r.setVisibility(View.GONE);
+                    }
+                    break;
                 case R.id.context_menu_select_all:
                     adapter.checkAllEntries();
-                    return true;
+                    flag = true;
+                    break;
                 case R.id.context_menu_select_none:
                     adapter.uncheckAllEntries();
-                    return true;
-                default:
-                    return false;
+                    flag = true;
+                    break;
             }
+
+            if (!flag) {
+                actionMode.finish();
+            }
+
+            return true;
         }
 
         @Override

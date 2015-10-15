@@ -9,4 +9,18 @@
         android:scrollbars="vertical"
         android:id="@+id/todolistView" />
 
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="10dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:text="Click + to add new entry."
+            android:id="@+id/textView3" />
+    </LinearLayout>
+
 </LinearLayout>
