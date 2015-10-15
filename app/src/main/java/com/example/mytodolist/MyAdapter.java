@@ -116,16 +116,17 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     void stopSelectMode () {
-        clearEntrySelection();
+        uncheckAllEntries();
 
         selectMode = false;
-        notifyItemRangeChanged(0, appdata.entryCount());
     }
 
-    void clearEntrySelection () {
+    void uncheckAllEntries () {
         int size = appdata.entryCount();
         for (int i = 0; i < size; i++) {
             appdata.getEntry(i).checked = false;
         }
+
+        notifyItemRangeChanged(0, appdata.entryCount());
     }
 }
