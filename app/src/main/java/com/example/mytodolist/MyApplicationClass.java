@@ -32,7 +32,7 @@ public class MyApplicationClass extends Application {
         dataset.add(e);
     }
 
-    public int getPos (Entry e) {
+    public int getEntryPos (Entry e) {
         return dataset.indexOf(e);
     }
 

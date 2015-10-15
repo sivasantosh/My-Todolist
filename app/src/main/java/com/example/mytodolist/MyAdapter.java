@@ -92,7 +92,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     void add (Entry e) {
         appdata.appendEntry(e);
-        notifyItemInserted(appdata.getPos(e));
+        notifyItemInserted(appdata.getEntryPos(e));
     }
 
     void update (String text, int pos) {
