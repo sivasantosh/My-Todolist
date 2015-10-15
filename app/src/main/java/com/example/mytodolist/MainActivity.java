@@ -107,8 +107,26 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+            MyApplicationClass appdata = MyApplicationClass.getInstance();
+
             switch (item.getItemId()) {
+                case R.id.context_menu_mark_done:
+                    adapter.markCheckEntriesAs(Entry.MARK_DONE);
+                    return true;
+                case R.id.context_menu_mark_imp:
+                    adapter.markCheckEntriesAs(Entry.MARK_IMP);
+                    return true;
+                case R.id.context_menu_no_mark:
+                    adapter.markCheckEntriesAs(Entry.MARK_DO);
+                    return true;
                 case R.id.context_menu_del:
+                    adapter.deleteCheckEntries();
+                    return true;
+                case R.id.context_menu_select_all:
+                    adapter.checkAllEntries();
+                    return true;
+                case R.id.context_menu_select_none:
+                    adapter.uncheckAllEntries();
                     return true;
                 default:
                     return false;
