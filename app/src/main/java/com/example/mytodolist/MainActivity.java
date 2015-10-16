@@ -122,7 +122,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
             MyApplicationClass appdata = MyApplicationClass.getInstance();
-            boolean flag = false;
 
             switch (item.getItemId()) {
                 case R.id.context_menu_mark_done:
@@ -140,19 +139,14 @@ public class MainActivity extends AppCompatActivity {
                         RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
                         r.setVisibility(View.GONE);
                     }
+                    actionMode.finish();
                     break;
                 case R.id.context_menu_select_all:
                     adapter.checkAllEntries();
-                    flag = true;
                     break;
                 case R.id.context_menu_select_none:
                     adapter.uncheckAllEntries();
-                    flag = true;
                     break;
-            }
-
-            if (!flag) {
-                actionMode.finish();
             }
 
             return true;
