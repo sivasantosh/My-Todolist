@@ -90,6 +90,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
         viewHolder.imageView.setImageResource(m);
         if (!selectMode) {
+            // goto select mode when clicked on the icon
             viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -150,7 +151,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             dataset.get(i).checked = true;
         }
 
-        notifyItemRangeChanged(0, size);
+        notifyDataSetChanged();
     }
 
     void markCheckEntriesAs (int mark) {

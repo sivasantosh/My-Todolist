@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class MainActivity extends AppCompatActivity {
     MyAdapter adapter;
     MyApplicationClass appdata;
-    ActionMode actionMode;
+    ActionMode actionMode; // contextual action bar
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,13 +30,13 @@ public class MainActivity extends AppCompatActivity {
         appdata = MyApplicationClass.getInstance();
 
         RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
-
         r.setLayoutManager(new LinearLayoutManager(this));
 
         adapter = new MyAdapter(this);
         r.setAdapter(adapter);
 
-
+        // if there are no todos show message which will get shown
+        // when recyclerview is hidden
         if (appdata.getDataset().size() == 0) {
             r.setVisibility(View.GONE);
         }
@@ -53,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.addEntry:
-                Intent intent = new Intent(this, TodoEntryActivity.class);
+                Intent intent = new Intent(this, newTodoActivity.class);
                 startActivityForResult(intent, 1, null);
                 break;
             default:
@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == 1 && resultCode == RESULT_OK) {
+            // from new todo activity
             String entry_text = data.getStringExtra("entry_text");
 
             if (entry_text != null && entry_text.length() > 0) {
@@ -84,6 +85,7 @@ public class MainActivity extends AppCompatActivity {
                 r.smoothScrollToPosition(appdata.getDataset().size());
             }
         } else if (requestCode == 2 && resultCode == RESULT_OK) {
+            // from edit todo activity
             String entry_text = data.getStringExtra("entry_text");
             int pos = data.getIntExtra("entry_pos", -1);
 
@@ -95,7 +97,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void editEntry (int pos) {
         Entry e = appdata.getDataset().get(pos);
-        Intent intent = new Intent(this, EditEntryActivity.class);
+        Intent intent = new Intent(this, EditTodoActivity.class);
         intent.putExtra("entry_text", e.text);
         intent.putExtra("entry_pos", pos);
 

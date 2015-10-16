@@ -18,13 +18,13 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TodoEntryActivity"
+            android:name=".newTodoActivity"
             android:label="@string/title_activity_todo_entry"
             android:windowSoftInputMode="stateVisible"
             android:parentActivityName=".MainActivity" >
         </activity>
         <activity
-            android:name=".EditEntryActivity"
+            android:name=".EditTodoActivity"
             android:label="@string/title_activity_edit_entry"
             android:windowSoftInputMode="stateVisible"
             android:parentActivityName=".MainActivity" >

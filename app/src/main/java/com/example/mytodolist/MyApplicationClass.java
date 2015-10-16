@@ -20,12 +20,13 @@ public class MyApplicationClass extends Application {
         dataset = new ArrayList<Entry>();
         singleton = this;
 
+        // performance test
 //        for (int i = 0; i < 1000; i++) {
 //            dataset.add(new Entry("test "+i));
 //        }
 
         // load todolist from database
-        // putting this here ensures that database is loaded only once
+        // putting this here ensures that database is loaded only once in the app lifecycle
         DatabaseHelper dh = new DatabaseHelper(getApplicationContext());
 
         SQLiteDatabase db = dh.getReadableDatabase();
