@@ -5,17 +5,17 @@ This is a todolist app built for android platform using java. This app has multi
 ### Multiple Activities
 This app has 3 activities.
 
-* Main Activity is where the list is displayed using RecyclerView.
+* Main Activity
 * New Todo Activity
 * Edit Todo Activity
 
 Communication between activities is done through Intents.
 
 ### RecyclerView
-RecyclerView is used instead of ListView because it's better. It has insert/delete/update animations. You can update one item at a time. And ofcourse it's easier than implementing a ListView once you understand the ViewHolder pattern.
+The todolist is shown using RecyclerView widget. RecyclerView is used instead of ListView because it's better. It has insert/delete/update animations. Views can be updated one item at a time. And of course it's easier than implementing a ListView once you understand the ViewHolder pattern.
 
 ### Contextual Action Bar
-When a long click event occurs on a todolist item the contextual action bar will be shown. You can also see checkbox added to each list item (although not part of contextual action bar). You can mark your todo's as important or done. You can also do item selection and deletion.
+When a long click event occurs on a todolist item (or click on icon) the contextual action bar will be shown. You can see a checkbox added to each list item. You can mark your todo items as important or completed. You can also do item selection and deletion.
 
 ### SQLite
 The app uses SQLite database for permanent storage. Instead of writing to database everytime the todolist is changed; the todolist is loaded only once from the database when the app is started. This todolist is buffered in the custom Application class. The application class allows the app to retain the todolist during configuration changes (Note: configuration change causes the activities to be destroyed along with it's data).
@@ -58,3 +58,7 @@ in landscape mode
 
 * search
 * drag and drop
+
+## Try it
+
+If you want to try it out you can download the [apk file here](https://drive.google.com/file/d/0B-w-mTjuqUzuYWhVM1dCcFhtYVE/view?usp=sharing).
