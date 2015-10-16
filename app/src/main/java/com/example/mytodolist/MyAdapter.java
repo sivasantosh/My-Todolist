@@ -57,7 +57,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     notifyItemChanged(dataset.indexOf(thisEntry));
                 }
             });
-            viewHolder.imageView.setOnLongClickListener(null);
+            viewHolder.itemView.setOnLongClickListener(null);
         } else {
             viewHolder.checkBox.setVisibility(View.GONE);
             viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
@@ -69,9 +69,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View v) {
-                    thisEntry.checked = true;
-                    activity.showContextMenu();
-                    startSelectMode();
+                    gotoSelectModeFromItem(thisEntry);
                     return true;
                 }
             });
@@ -91,6 +89,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         }
 
         viewHolder.imageView.setImageResource(m);
+        if (!selectMode) {
+            viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    gotoSelectModeFromItem(thisEntry);
+                }
+            });
+        } else {
+            viewHolder.imageView.setClickable(false);
+        }
+    }
+
+    private void gotoSelectModeFromItem (Entry e) {
+        e.checked = true;
+        activity.showContextMenu();
+        startSelectMode();
     }
 
     @Override
