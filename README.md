@@ -4,6 +4,7 @@ This is a todolist app built for android platform using java. This app has multi
 ## Implementation Details
 ### Multiple Activities
 This app has 3 activities.
+
 * Main Activity is where the list is displayed using RecyclerView.
 * New Todo Activity
 * Edit Todo Activity
