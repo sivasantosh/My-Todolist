@@ -104,8 +104,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private void gotoSelectModeFromItem (Entry e) {
         e.checked = true;
-        activity.showContextMenu();
         startSelectMode();
+        activity.showContextMenu();
     }
 
     @Override
