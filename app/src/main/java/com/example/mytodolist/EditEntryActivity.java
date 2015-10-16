@@ -23,6 +23,7 @@ public class EditEntryActivity extends AppCompatActivity {
         pos = data.getIntExtra("entry_pos", -1);
 
         editText.setText(entry_text);
+        editText.setSelection(entry_text.length());
     }
 
     @Override
