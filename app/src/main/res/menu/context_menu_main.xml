@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item android:id="@+id/context_menu_mark_done" android:icon="@drawable/done_button" android:title="Mark as done" app:showAsAction="always" />
     <item android:id="@+id/context_menu_mark_imp" android:icon="@drawable/imp_button" android:title="Mark as important" app:showAsAction="always" />
-    <item android:id="@+id/context_menu_no_mark" android:icon="@drawable/nomark_button" android:title="Remove marks" />
+    <item android:id="@+id/context_menu_no_mark" android:icon="@drawable/nomark_button" android:title="Remove mark" />
     <item android:id="@+id/context_menu_del" android:icon="@drawable/delete_button" android:title="Delete" app:showAsAction="always" />
     <item android:id="@+id/context_menu_select_all" android:title="Select All" />
     <item android:id="@+id/context_menu_select_none" android:title="Select None" />
