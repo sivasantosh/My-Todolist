@@ -13,7 +13,10 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     MainActivity activity;
     ArrayList<Entry> dataset;
-    boolean selectMode = false;
+
+    enum Mode { normal, select };
+
+    Mode currMode = Mode.normal;
 
     class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
@@ -46,35 +49,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         final Entry thisEntry = dataset.get(i);
         viewHolder.textView.setText(thisEntry.text);
 
-        if (selectMode) {
-            viewHolder.checkBox.setVisibility(View.VISIBLE);
-            viewHolder.checkBox.setChecked(thisEntry.checked);
-            viewHolder.checkBox.setClickable(false);
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    thisEntry.checked = !thisEntry.checked;
-                    notifyItemChanged(dataset.indexOf(thisEntry));
-                }
-            });
-            viewHolder.itemView.setOnLongClickListener(null);
-        } else {
-            viewHolder.checkBox.setVisibility(View.GONE);
-            viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    activity.editEntry(dataset.indexOf(thisEntry));
-                }
-            });
-            viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    gotoSelectModeFromItem(thisEntry);
-                    return true;
-                }
-            });
-        }
-
         int m;
         switch (thisEntry.marked) {
             case 1:
@@ -88,17 +62,47 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                 break;
         }
 
+        viewHolder.checkBox.setClickable(false);
         viewHolder.imageView.setImageResource(m);
-        if (!selectMode) {
-            // goto select mode when clicked on the icon
-            viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    gotoSelectModeFromItem(thisEntry);
-                }
-            });
-        } else {
-            viewHolder.imageView.setClickable(false);
+
+        switch (currMode) {
+            case select:
+                viewHolder.checkBox.setVisibility(View.VISIBLE);
+                viewHolder.checkBox.setChecked(thisEntry.checked);
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        thisEntry.checked = !thisEntry.checked;
+                        notifyItemChanged(dataset.indexOf(thisEntry));
+                    }
+                });
+                viewHolder.itemView.setOnLongClickListener(null);
+                viewHolder.imageView.setClickable(false);
+                break;
+            case normal:
+                viewHolder.checkBox.setVisibility(View.GONE);
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.editEntry(dataset.indexOf(thisEntry));
+                    }
+                });
+                viewHolder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View v) {
+                        gotoSelectModeFromItem(thisEntry);
+                        return true;
+                    }
+                });
+
+                // goto select mode when clicked on the icon
+                viewHolder.imageView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        gotoSelectModeFromItem(thisEntry);
+                    }
+                });
+                break;
         }
     }
 
@@ -126,12 +130,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     void startSelectMode () {
-        selectMode = true;
+        currMode = Mode.select;
         notifyItemRangeChanged(0, dataset.size());
     }
 
     void stopSelectMode () {
-        selectMode = false;
+        currMode = Mode.normal;
 
         uncheckAllEntries();
     }
