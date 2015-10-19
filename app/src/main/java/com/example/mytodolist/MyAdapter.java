@@ -178,4 +178,8 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             }
         }
     }
+
+    public void filterTodolist (String str) {
+
+    }
 }

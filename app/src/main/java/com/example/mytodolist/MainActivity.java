@@ -8,11 +8,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.view.ActionMode;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 
 import java.util.ArrayList;
 
@@ -20,6 +23,9 @@ public class MainActivity extends AppCompatActivity {
     MyAdapter adapter;
     MyApplicationClass appdata;
     ActionMode actionMode; // contextual action bar
+
+    SearchView searchView;
+    MenuItem searchMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,7 +51,35 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
+
+        searchMenuItem = menu.findItem(R.id.search);
+
+        searchView = (SearchView) searchMenuItem.getActionView();
+
+        searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
+
+        searchView.setQueryHint(getResources().getString(R.string.search_hint));
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                stopLiveSearch();
+
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                adapter.filterTodolist(newText);
+                return false;
+            }
+        });
+
         return true;
+    }
+
+    public void stopLiveSearch () {
+        searchMenuItem.collapseActionView();
     }
 
     @Override
