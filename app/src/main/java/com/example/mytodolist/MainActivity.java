@@ -4,6 +4,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     SearchView searchView;
     MenuItem searchMenuItem;
+    MenuItem addMenuItem;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,12 +55,29 @@ public class MainActivity extends AppCompatActivity {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
         searchMenuItem = menu.findItem(R.id.search);
+        addMenuItem = menu.findItem(R.id.addEntry);
 
         searchView = (SearchView) searchMenuItem.getActionView();
 
         searchView.setImeOptions(EditorInfo.IME_ACTION_DONE);
 
         searchView.setQueryHint(getResources().getString(R.string.search_hint));
+
+        MenuItemCompat.setOnActionExpandListener(searchMenuItem, new MenuItemCompat.OnActionExpandListener() {
+            @Override
+            public boolean onMenuItemActionExpand(MenuItem item) {
+                adapter.setFilterMode(true);
+                addMenuItem.setVisible(false);
+                return true;
+            }
+
+            @Override
+            public boolean onMenuItemActionCollapse(MenuItem item) {
+                adapter.setFilterMode(false);
+                addMenuItem.setVisible(true);
+                return true;
+            }
+        });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
@@ -116,6 +135,9 @@ public class MainActivity extends AppCompatActivity {
 
             if (entry_text.length() > 0 && pos >= 0) {
                 adapter.update(entry_text, pos);
+
+                RecyclerView r = (RecyclerView) findViewById(R.id.todolistView);
+                r.smoothScrollToPosition(pos);
             }
         }
     }

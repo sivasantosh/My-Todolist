@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class MyApplicationClass extends Application {
     private static MyApplicationClass singleton;
     private ArrayList<Entry> dataset;
+    private ArrayList<Integer> visibleDataset;
 
     public static MyApplicationClass getInstance () {
         return singleton;
@@ -18,6 +19,7 @@ public class MyApplicationClass extends Application {
     public void onCreate() {
         super.onCreate();
         dataset = new ArrayList<Entry>();
+        visibleDataset = new ArrayList<Integer>();
         singleton = this;
 
         // performance test
@@ -54,5 +56,9 @@ public class MyApplicationClass extends Application {
 
     public ArrayList<Entry> getDataset() {
         return dataset;
+    }
+
+    public ArrayList<Integer> getVisibleDataset() {
+        return visibleDataset;
     }
 }

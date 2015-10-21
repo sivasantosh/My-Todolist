@@ -13,8 +13,9 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     MainActivity activity;
     ArrayList<Entry> dataset;
+    ArrayList<Integer> visibleDataset;
 
-    enum Mode { normal, select };
+    enum Mode { normal, select, filter };
 
     Mode currMode = Mode.normal;
 
@@ -28,12 +29,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             imageView = (ImageView) v.findViewById(R.id.imageView);
             textView = (TextView) v.findViewById(R.id.textView);
             checkBox = (CheckBox) v.findViewById(R.id.checkBox);
+            v.setClickable(true);
         }
     }
 
     MyAdapter (MainActivity activity) {
         this.activity = activity;
-        dataset = MyApplicationClass.getInstance().getDataset();
+        MyApplicationClass appdata = MyApplicationClass.getInstance();
+        dataset = appdata.getDataset();
+        visibleDataset = appdata.getVisibleDataset();
     }
 
     @Override
@@ -46,7 +50,14 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public void onBindViewHolder(final ViewHolder viewHolder, int i) {
-        final Entry thisEntry = dataset.get(i);
+        final Entry thisEntry;
+
+        if (currMode == Mode.filter) {
+            thisEntry = dataset.get(visibleDataset.get(i));
+        } else {
+            thisEntry = dataset.get(i);
+        }
+
         viewHolder.textView.setText(thisEntry.text);
 
         int m;
@@ -103,6 +114,19 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
                     }
                 });
                 break;
+            case filter:
+                viewHolder.checkBox.setVisibility(View.GONE);
+                viewHolder.imageView.setOnClickListener(null);
+                viewHolder.itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activity.stopLiveSearch();
+                        activity.editEntry(dataset.indexOf(thisEntry));
+                    }
+                });
+                viewHolder.itemView.setOnLongClickListener(null);
+
+                break;
         }
     }
 
@@ -114,7 +138,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     @Override
     public int getItemCount() {
-        return dataset.size();
+        int size;
+
+        if (currMode == Mode.filter) {
+            size = visibleDataset.size();
+        } else {
+            size = dataset.size();
+        }
+
+        return size;
     }
 
     void add (Entry e) {
@@ -180,6 +212,22 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public void filterTodolist (String str) {
+        visibleDataset.clear();
 
+        for (int i = 0, size = dataset.size(); i < size; i++) {
+            if (dataset.get(i).text.contains(str)) {
+                visibleDataset.add(i);
+            }
+        }
+
+        notifyDataSetChanged();
+    }
+
+    public void setFilterMode (boolean flag) {
+        if (flag) {
+            currMode = Mode.filter;
+        } else {
+            currMode = Mode.normal;
+        }
     }
 }
