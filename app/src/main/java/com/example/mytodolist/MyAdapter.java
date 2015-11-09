@@ -154,6 +154,31 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         notifyItemInserted(dataset.indexOf(e));
     }
 
+    void delete (int pos) {
+        dataset.remove(pos);
+        notifyItemRemoved(pos);
+    }
+
+    void onItemMove (int fromPos, int toPos) {
+        if (fromPos < toPos) {
+            for (int i = fromPos; i < toPos; i++) {
+                Entry s = dataset.get(i);
+                Entry s2 = dataset.get(i+1);
+                dataset.set(i, s2);
+                dataset.set(i+1, s);
+            }
+        } else {
+            for (int i = fromPos; i > toPos; i--) {
+                Entry s = dataset.get(i);
+                Entry s2 = dataset.get(i-1);
+                dataset.set(i, s2);
+                dataset.set(i-1, s);
+            }
+        }
+
+        notifyItemMoved(fromPos, toPos);
+    }
+
     void update (String text, int pos) {
         Entry e = dataset.get(pos);
         e.text = text;

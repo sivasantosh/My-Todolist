@@ -56,9 +56,13 @@ in landscape mode
 
 ## TODO
 
-* search
-* drag and drop
+* search - implemented.
+* drag and drop - implemented. (swipe also implemented)
+
+Use drag/drop feature to move entries around. Click and hold on an entry to enable drag/drop. Even though it will take you selection mode you can still do drag/drop with the item you are holding.
+
+Use swipe to quick delete an entry.
 
 ## Try it
 
-If you want to try it out you can download the [apk file here](https://drive.google.com/file/d/0B-w-mTjuqUzuYWhVM1dCcFhtYVE/view?usp=sharing).
+If you want to try it out you can download the [apk file here](https://drive.google.com/file/d/0B-w-mTjuqUzuU2tPLWhjajdZZlE/view?usp=sharing) (1.18MB).
